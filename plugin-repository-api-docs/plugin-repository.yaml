@@ -1,0 +1,667 @@
+openapi: 3.0.1
+info:
+  title: 插件仓库 REST API 参考手册
+  description: 插件仓库 REST API
+  contact:
+    name: GTCloud
+    url: http://www.gtgis.cn/
+    email: gt@gtgis.cn
+  version: 1.0.0
+servers:
+- url: http://127.0.0.1:39234/repository
+  description: 本级测试环境
+paths:
+  /admin/plugins/modify:
+    put:
+      tags:
+      - 插件管理(管理员角色)
+      summary: 修改插件
+      description: 修改某个插件
+      operationId: modify
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Plugin'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Result'
+      security:
+      - bearerAuth: []
+  /admin/categories/modify:
+    put:
+      tags:
+      - 插件管理(管理员角色)
+      summary: 修改插件类别
+      description: 修改某个插件类别
+      operationId: modify_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Result'
+      security:
+      - bearerAuth: []
+  /user/plugins/latest:
+    post:
+      tags:
+      - 插件管理(普通用户角色)
+      summary: 查询最新插件
+      description: 按插件名、兼容版本号、操作系统和处理器架构查询最新插件版本号
+      operationId: findLatestVersion
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Result'
+  /user/plugins/exact:
+    post:
+      tags:
+      - 插件管理(普通用户角色)
+      summary: 查询某个插件
+      description: 按插件名、版本号、操作系统和处理器架构精确查询某个插件
+      operationId: exact
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties:
+                type: string
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Result'
+  /user/auth/login:
+    post:
+      tags:
+      - 插件管理(普通用户角色)
+      summary: 用户登录
+      description: 用户登录
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUser'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Result'
+  /admin/plugins/upload/{id}:
+    post:
+      tags:
+      - 插件管理(管理员角色)
+      summary: 上传插件
+      description: 按插件Id上传某个插件压缩文件
+      operationId: upload
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: files
+        in: query
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+            format: binary
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Result'
+      security:
+      - bearerAuth: []
+  /admin/plugins/remove/{id}:
+    post:
+      tags:
+      - 插件管理(管理员角色)
+      summary: 移除插件
+      description: 按插件Id将某个插件移入回收站
+      operationId: remove
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: deleted
+        in: query
+        required: true
+        schema:
+          type: boolean
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Result'
+      security:
+      - bearerAuth: []
+  /admin/plugins/publish/{id}:
+    post:
+      tags:
+      - 插件管理(管理员角色)
+      summary: 发布插件
+      description: 按插件Id发布某个插件
+      operationId: publish
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: published
+        in: query
+        required: true
+        schema:
+          type: boolean
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Result'
+      security:
+      - bearerAuth: []
+  /admin/plugins/add:
+    post:
+      tags:
+      - 插件管理(管理员角色)
+      summary: 添加插件
+      description: 向插件仓库里添加一个插件
+      operationId: add
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Plugin'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Result'
+      security:
+      - bearerAuth: []
+  /admin/categories/add:
+    post:
+      tags:
+      - 插件管理(管理员角色)
+      summary: 添加插件类别
+      description: 添加一个插件类别
+      operationId: add_1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Category'
+        required: true
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Result'
+      security:
+      - bearerAuth: []
+  /user/plugins/{id}:
+    get:
+      tags:
+      - 插件管理(普通用户角色)
+      summary: 获取插件详情
+      description: 按插件Id或插件Id列表获取某个或多个插件详情
+      operationId: findPluginById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Result'
+  /user/plugins/search:
+    get:
+      tags:
+      - 插件管理(普通用户角色)
+      summary: 模糊查询插件
+      description: 按关键字查询插件(支持分页)
+      operationId: search
+      parameters:
+      - name: keyword
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Result'
+  /user/plugins/list:
+    get:
+      tags:
+      - 插件管理(普通用户角色)
+      summary: 列举所有插件
+      description: 按类别Id列举所有插件(支持分页)
+      operationId: list
+      parameters:
+      - name: categoryId
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Result'
+  /user/plugins/download/{id}:
+    get:
+      tags:
+      - 插件管理(普通用户角色)
+      summary: 下载插件
+      description: 按插件Id下载某个插件
+      operationId: download
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  type: string
+                  format: byte
+  /user/plugins/category-path/{id}:
+    get:
+      tags:
+      - 插件管理(普通用户角色)
+      summary: 获取插件类别路径
+      description: 按插件Id获取插件类别路径
+      operationId: findCategoryPath
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Result'
+  /user/categories/{id}:
+    get:
+      tags:
+      - 插件管理(普通用户角色)
+      summary: 获取插件类别
+      description: 按类别Id获取某个插件类别
+      operationId: findCategoryById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Result'
+  /gmx/v1/ping:
+    get:
+      tags:
+      - 插件仓库应用状态管理
+      summary: 查看插件仓库服务器端应用状态
+      description: 查看插件仓库服务器端应用状态
+      operationId: ping
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Result'
+  /admin/plugins/search:
+    get:
+      tags:
+      - 插件管理(管理员角色)
+      summary: 模糊查询插件
+      description: 按关键字、是否已发布、是否已移入回收站查询所有插件(支持分页)
+      operationId: search_1
+      parameters:
+      - name: keyword
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: published
+        in: query
+        required: false
+        schema:
+          type: boolean
+      - name: deleted
+        in: query
+        required: false
+        schema:
+          type: boolean
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Result'
+      security:
+      - bearerAuth: []
+  /admin/plugins/list:
+    get:
+      tags:
+      - 插件管理(管理员角色)
+      summary: 列举所有插件
+      description: 按类别Id、是否已发布、是否已移入回收站列举所有插件(支持分页)
+      operationId: list_1
+      parameters:
+      - name: categoryId
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: published
+        in: query
+        required: false
+        schema:
+          type: boolean
+      - name: deleted
+        in: query
+        required: false
+        schema:
+          type: boolean
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Result'
+      security:
+      - bearerAuth: []
+  /admin/categories/list:
+    get:
+      tags:
+      - 插件管理(管理员角色)
+      summary: 列举所有插件类别
+      description: 按类别父Id列举其所属的所有插件
+      operationId: listAll
+      parameters:
+      - name: parentId
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Result'
+      security:
+      - bearerAuth: []
+  /admin/auth/verify:
+    get:
+      tags:
+      - 插件管理(管理员角色)
+      summary: 验证用户令牌
+      description: 验证用户令牌是否有效
+      operationId: verify
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Result'
+      security:
+      - bearerAuth: []
+  /admin/auth/logout:
+    get:
+      tags:
+      - 插件管理(管理员角色)
+      summary: 用户退出
+      description: 登录用户主动登出
+      operationId: logout
+      parameters:
+      - name: Authorization
+        in: header
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Result'
+      security:
+      - bearerAuth: []
+  /admin/plugins/delete/{id}:
+    delete:
+      tags:
+      - 插件管理(管理员角色)
+      summary: 删除插件
+      description: 按插件Id删除某个插件
+      operationId: deleteById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Result'
+      security:
+      - bearerAuth: []
+  /admin/categories/delete/{id}:
+    delete:
+      tags:
+      - 插件管理(管理员角色)
+      summary: 删除插件类别
+      description: 按类别Id删除某个插件类别
+      operationId: delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Result'
+      security:
+      - bearerAuth: []
+components:
+  schemas:
+    Category:
+      type: object
+      properties:
+        categoryId:
+          type: string
+        name:
+          type: string
+        parentId:
+          type: string
+    Plugin:
+      type: object
+      properties:
+        pluginId:
+          type: string
+        name:
+          type: string
+        build:
+          type: string
+          format: date
+        version:
+          type: string
+        description:
+          type: string
+        compatibleVersion:
+          type: string
+        os:
+          type: string
+        arch:
+          type: string
+        dependency:
+          type: string
+        category:
+          $ref: '#/components/schemas/Category'
+    Result:
+      type: object
+      properties:
+        retcode:
+          type: integer
+          format: int32
+        retmsg:
+          type: string
+        retdata:
+          type: object
+    LoginUser:
+      type: object
+      properties:
+        username:
+          type: string
+        password:
+          type: string
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

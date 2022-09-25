@@ -1,0 +1,66 @@
+server:
+  port: 39234
+  servlet:
+    context-path: /repository
+
+spring:
+  application:
+    name: PluginRepositoryApp
+  main:
+    banner-mode: "off"
+  profiles:
+    active: dev
+  #thymeleaf:
+    #cache: false
+    #prefix: classpath:/templates/
+    #suffix: .html
+
+  datasource:
+    username: sa
+    password: sa
+    #url: jdbc:sqlite:${exeRunDir}/xapps/sqlite/repository.db?date_string_format=yyyy-MM-dd
+    url: jdbc:sqlite:plugin-repository-app/src/main/resources/repository.db?date_string_format=yyyy-MM-dd
+    driver-class-name: org.sqlite.JDBC
+
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 2048MB
+      max-request-size: 2048MB
+
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          filter:
+            CommonsRequestLoggingFilter: debug
+    gtcloud:
+      plugin:
+        repository : debug
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    default-models-expand-depth: -1
+
+repository:
+  url: http://127.0.0.1:39234/repository
+
+blobstore:
+  url: http://127.0.0.1:39231
+
+redis:
+  url: redis://127.0.0.1:6379
+
+mifs:
+  url: http://127.0.0.1:8082
+
+auth:
+  token:
+    expiresIn: 15 # minutes
+
+static:
+  resources:
+    location: D:/99-Temp/plugInUnitWarehouse/

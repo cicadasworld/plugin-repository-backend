@@ -1,0 +1,10 @@
+rootProject.name = "plugin-repository-backend"
+include("plugin-repository-app")
+include("plugin-repository-domain")
+include("plugin-repository-dao")
+include("plugin-repository-service")
+include("plugin-repository-api")
+include("plugin-repository-api-docs")
+include("plugin-repository-result")
+include("plugin-repository-security")
+include("plugin-repository-gateway")
