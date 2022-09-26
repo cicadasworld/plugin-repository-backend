@@ -37,7 +37,7 @@ public interface CategoryService {
     List<Category> listChildren(String parentId);
 
     /**
-     * 删除类别
+     * 删除类别及其子类别
      * @param categoryId 类别Id
      * @throws ResultException 业务异常
      */

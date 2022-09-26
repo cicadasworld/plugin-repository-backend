@@ -10,6 +10,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -64,7 +65,27 @@ public class CategoryServiceImpl implements CategoryService {
         if (!categoryDao.existsById(categoryId)) {
             throw new CategoryNotFoundException();
         }
-        categoryDao.deleteById(categoryId);
+        List<Category> children = categoryDao.findByParentId(categoryId);
+        List<String> ids = new ArrayList<>();
+        ids.add(categoryId);
+        for (Category category : children) {
+            String id = category.getCategoryId();
+            ids.add(id);
+            findChildren(id, ids);
+        }
+
+        for (String id : ids) {
+            categoryDao.deleteById(id);
+        }
+    }
+
+    private void findChildren(String categoryId, List<String> ids) {
+        List<Category> children = categoryDao.findByParentId(categoryId);
+        for (Category category : children) {
+            String id = category.getCategoryId();
+            ids.add(id);
+            findChildren(id, ids);
+        }
     }
 
     @Override
