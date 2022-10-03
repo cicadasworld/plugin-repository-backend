@@ -1,7 +1,7 @@
 package gtcloud.plugin.repository.service;
 
 import gtcloud.plugin.repository.utils.HashUtil;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.UUID;
 

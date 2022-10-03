@@ -1,10 +1,13 @@
 plugins {
-    `java-library`
-    id("spring-web-dependencies")
+    id("java-library-conventions")
 }
 
 dependencies {
-    api(project(":plugin-repository-service"))
-    api(project(":plugin-repository-security"))
-    implementation("org.springdoc:springdoc-openapi-ui:${openapiUiVersion}")
+    implementation(project(":plugin-repository-domain"))
+    implementation(project(":plugin-repository-result"))
+    implementation(project(":plugin-repository-service"))
+    implementation(project(":plugin-repository-security"))
+    implementation(platform("gtcloud.plugin.repository:platform"))
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springdoc:springdoc-openapi-ui")
 }

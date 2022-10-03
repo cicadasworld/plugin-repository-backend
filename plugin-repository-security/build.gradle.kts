@@ -1,10 +1,13 @@
 plugins {
-    `java-library`
-    id("spring-web-dependencies")
+    id("java-library-conventions")
 }
 
 dependencies {
-    api(project(":plugin-repository-service"))
-    implementation("io.lettuce:lettuce-core:${lettuceVersion}")
-    implementation("com.auth0:java-jwt:${javaJwtVersion}")
+    implementation(project(":plugin-repository-domain"))
+    implementation(project(":plugin-repository-result"))
+    implementation(project(":plugin-repository-service"))
+    implementation(platform("gtcloud.plugin.repository:platform"))
+    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("io.lettuce:lettuce-core")
+    implementation("com.auth0:java-jwt")
 }

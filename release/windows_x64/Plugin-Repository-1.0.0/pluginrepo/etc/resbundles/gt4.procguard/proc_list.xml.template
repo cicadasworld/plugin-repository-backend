@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="gb2312"?>
+
+<procList>
+    <proc name="mapserver" enabled="false" >
+        <param name="description" value="Server" />
+        <param name="max_tries" value="-1" />
+        <param name="instances" value="1" />
+        <param name="grace_stop" value="1" />
+
+        <!-- 等待该进程的秒数, 浮点数. 若<0表示一次性任务, 将一直等待该进程结束运行 -->
+        <param name="wait_seconds" value="2.5" />
+
+        <!-- 启动该子进程的可执行程序及命令行参数 -->
+        <param name="executable" value="${exeRunDir}/ngis_mapserver${dflag}${.exe}" />
+        <param name="args" value="-console -sid ${instSeqNo}" />
+
+        <!-- 需要传递给该子进程的专用环境变量(可选). -->
+        <envVars>
+            <add name="win.PATH" value="${PATH};${runDir};${JAVA_HOME}\jre\bin\server" />
+            <add name="linux.PATH" value="${PATH}:${runDir}:${JAVA_HOME}/jre/bin/server" />
+        </envVars>
+    </proc>
+
+</procList>
+

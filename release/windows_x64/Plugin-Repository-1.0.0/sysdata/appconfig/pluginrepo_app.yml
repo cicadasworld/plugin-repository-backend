@@ -1,0 +1,55 @@
+server:
+  port: 39234
+  servlet:
+    context-path: /repository
+
+spring:
+  application:
+    name: PluginRepositoryApp
+  main:
+    banner-mode: "off"
+  datasource:
+    username: sa
+    password: sa
+    url: jdbc:sqlite:${SQLITE_HOME}/repository.db?date_string_format=yyyy-MM-dd
+    driver-class-name: org.sqlite.JDBC
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 2048MB
+      max-request-size: 2048MB
+      
+logging:
+  level:
+    gtcloud:
+      plugin:
+        repository : info
+
+static:
+  resources:
+    location: ${FRONTEND_HOME}/
+
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    default-models-expand-depth: -1
+    
+repository:
+  url: http://127.0.0.1:39234/repository
+
+blobstore:
+  url: http://127.0.0.1:39231
+
+redis:
+  url: redis://127.0.0.1:6379
+
+auth:
+  token:
+    expiresIn: 15 # minutes
+
+sso:
+  enable: false
+
+mifs:
+  url: http://127.0.0.1:8082

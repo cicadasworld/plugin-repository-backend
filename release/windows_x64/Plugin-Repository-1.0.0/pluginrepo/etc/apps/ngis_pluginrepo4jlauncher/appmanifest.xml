@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="gb2312"?>
+
+<application>
+    <app-params>
+        <param name="version" value="V0.1" />
+        <param name="name" value="pluginrepo" />
+        <param name="displayName" value="Plugin Repository Server Launcher and Guard" />
+        <param name="description" value="Plugin Repository Server 加载与守护服务进程" />
+        <param name="logo" value="Plugin Repository Server Launcher and Guard." />
+        <param name="mainResBundleId" value="gt4.procguard" />
+        <param name="daemonOrExecutedByWrapper" value="true" notes="only-for-linux" />
+        <param name="execByWrapperMsg" value="不能直接执行ngis_pluginrepo4jlauncher。若要以前台方式启动服务器，请执行run.sh。" />
+    </app-params>
+</application>
+

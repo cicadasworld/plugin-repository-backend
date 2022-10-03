@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="gb2312"?>
+
+<ProcGuardConfiguration>
+
+    <!-- 通过web来对procguard进行远程管理所需要的参数. -->
+    <webAdminParams>
+        <param name="httpd.name" value="DataMgmt Launcher and Guard" />
+        <param name="httpd.listenAddress" value="0.0.0.0:48969" />
+        <param name="httpd.threadPoolSize" value="1" />
+
+        <!-- 欢迎页面. -->
+        <param name="httpd.welcomePage" value="/pages/index.html" />
+        <param name="httpd.docRoot" value="${exeEtcDir}/resbundles/${currentResBundleId}" />
+    </webAdminParams>
+
+</ProcGuardConfiguration>

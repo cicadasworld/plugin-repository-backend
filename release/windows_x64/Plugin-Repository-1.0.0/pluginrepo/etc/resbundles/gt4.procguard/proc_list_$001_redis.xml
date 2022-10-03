@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="gb2312"?>
+<procList>
+    <proc name="redis" enabled="true">
+        <param name="description" value="redis" />
+        <param name="max_tries" value="-1" />
+        <param name="instances" value="1" />
+        <param name="grace_stop" value="1" />
+        <param name="wait_seconds" value="4" />
+
+        <!-- 启动该子进程的可执行程序及命令行参数 -->
+        <param name="executable" value="${exeRunDir}\xapps\redis\redis-server.exe ${exeRunDir}\xapps\redis\redis.windows.conf" />
+		
+		<!-- 停止该子进程的可执行程序及命令行参数(可选) -->
+        <param name="stopExecutable" value="${exeRunDir}\xapps\redis\redis-cli.exe" />
+		<param name="stopArgs" value="shutdown" />
+    </proc>
+</procList>

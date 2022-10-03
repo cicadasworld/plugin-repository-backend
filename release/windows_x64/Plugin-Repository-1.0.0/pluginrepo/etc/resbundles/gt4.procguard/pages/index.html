@@ -1,0 +1,232 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gbk" />
+<title>ProcGuard Status Viewer</title>
+<style type="text/css">
+    .mapTable {
+        border-right: 1px solid #BB88BB;
+        border-bottom: 1px solid #BB88BB;
+    }
+    .mapTd {
+        border-left: 1px solid #BB88BB;
+        border-top: 1px solid #BB88BB;
+    }
+    .mapTdWarn {
+        border-left: 1px solid #BB88BB;
+        border-top: 1px solid #BB88BB;
+        background: #FF8888;
+    }
+    .mapTr_0 {
+        background: #EEEEFF;
+        font-weight: bold;
+        text-align: center;
+    }
+    .mapTr {
+        text-align: center;
+    }
+</style>
+
+<script type="text/javascript">
+
+function add_section(div, sectionText)
+{
+    var h = document.createElement("h3");
+    h.innerHTML = "<span>" + sectionText + "</span>";
+    div.appendChild(h);
+}
+
+function replace_all(str, oldSubStr, newSubStr)
+{
+    while (str.indexOf(oldSubStr) >= 0) {
+        str = str.replace(oldSubStr, newSubStr);
+    }
+    return str;
+}
+
+function do_ajax(serv_url)
+{
+    //alert('do_ajax(), serv_url=' + serv_url);
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', serv_url, false);
+    xhr.send();
+    if (xhr.status !== 200) {
+        alert("发生错误: " + xhr.responseText);
+        return false;
+    }
+
+    var hasJSON = (typeof JSON === "object");
+    if (hasJSON) {
+        var ackDO = JSON.parse(xhr.responseText);
+    } else {
+        var json = 'var ackDO=' + xhr.responseText;
+        eval(json);
+    }
+
+    if (ackDO.retcode == 0) {
+        make_page();
+    } else {
+        alert("发生错误: " + ackDO.retmsg);
+    }
+
+    return false;
+}
+
+function create_proclist_table(div, ackDO)
+{
+    var table = document.createElement('table');
+    table.className = 'mapTable';
+    div.appendChild(table);
+
+    var tbody = document.createElement('tbody');
+    table.appendChild(tbody);
+
+    // title row
+    var tr = document.createElement("tr");
+    tr.className =  'mapTr_0';
+    var cols = ["序号", "进程名称", "PID", "状态", "命令行", "重启次数", "最近启动时刻", "操作"];
+    for (var c=0; c<cols.length; ++c) {
+        var td = document.createElement("td");
+        td.className = "mapTd";
+        td.innerHTML = cols[c];
+        tr.appendChild(td);
+    }
+    tbody.appendChild(tr);
+
+    var counter = { value: 0 };
+    var procList = ackDO.procList;
+    for (var i=0; i<procList.length; ++i) {
+        var procDO = procList[i];
+        create_proc_row(tbody, procDO, counter);
+    }
+
+    var abutton = '<button onclick="do_ajax(&quot;/pguard/restartAllProc&quot;)">重启所有进程</button>';
+    var h = document.createElement("div");
+    h.innerHTML = abutton;
+    div.appendChild(h);
+}
+
+function create_proc_row(tbody, procDO, counter)
+{
+    var tr = document.createElement("tr");
+    tr.className =  'mapTr';
+    tbody.appendChild(tr);
+
+    // seq
+    var td = document.createElement("td");
+    td.className =  'mapTd';
+    td.innerHTML = '' + counter.value;
+    tr.appendChild(td);
+
+    // name
+    td = document.createElement("td");
+    td.className =  'mapTd';
+    td.innerHTML = '' + procDO.name;
+    tr.appendChild(td);
+
+    // pid
+    td = document.createElement("td");
+    td.className =  'mapTd';
+    td.innerHTML = '' + procDO.pid;
+    tr.appendChild(td);
+
+    // status
+    td = document.createElement("td");
+    if (procDO.status == 'running') {
+        td.className =  'mapTd';
+        td.innerHTML = '正在运行';
+    } else {
+        td.className = 'mapTdWarn';
+        td.innerHTML = '未在运行';
+    }
+    tr.appendChild(td);
+
+    // cmdline
+    td = document.createElement("td");
+    td.className =  'mapTd';
+    td.innerHTML = '' + procDO.executable + '&nbsp' + procDO.args;
+    tr.appendChild(td);
+
+    // spawnTimes
+    td = document.createElement("td");
+    td.className =  'mapTd';
+    td.innerHTML = '' + (procDO.spawnTimes-1);
+    tr.appendChild(td);
+
+    // whenLastSpawn
+    td = document.createElement("td");
+    td.className =  'mapTd';
+    td.innerHTML = '' + procDO.whenLastSpawn;
+    tr.appendChild(td);
+
+    if (procDO.status == 'running') {
+        var abutton = '<button onclick="do_ajax(&quot;/pguard/stopProc?pid={1}&slotIndex={2}&quot;)">停止进程</button>';
+    } else {
+        var abutton = '<button onclick="do_ajax(&quot;/pguard/startProc?pid={1}&slotIndex={2}&quot;)">启动进程</button>';
+    }
+    abutton = replace_all(abutton, '{1}', procDO.pid + '');
+    abutton = replace_all(abutton, '{2}', procDO.slotIndex + '');
+
+    td = document.createElement("td");
+    td.className =  'mapTd';
+    td.innerHTML = '' + abutton;
+    tr.appendChild(td);
+
+    counter.value += 1;
+}
+
+function get_content_div()
+{
+    var main_div = document.getElementById('main_div');
+    main_div.style.position = 'absolute';
+    //main_div.style.height = "100%";
+    //main_div.style.width = "100%";
+    //main_div.style.left = '10px';
+
+    while (main_div.hasChildNodes()) {
+        main_div.removeChild(main_div.firstChild);
+    }
+    var div = document.createElement("div");
+    main_div.appendChild(div);
+
+    return div;
+}
+
+function make_page()
+{
+    var addr = '/pguard/getProcList?encode=gbk';
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', addr, true);
+
+    var hasJSON = (typeof JSON === "object");
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            if (hasJSON) {
+                var ackDO = JSON.parse(xhr.responseText);
+            } else {
+                var json = 'var ackDO=' + xhr.responseText;
+                eval(json);
+            }
+
+            var div = get_content_div();
+            if (ackDO.retcode == 0) {
+                add_section(div, "ProcGuard启动自: " + ackDO.upTime);
+                create_proclist_table(div, ackDO);
+            } else {
+                add_section(div, "发生错误: " + ackDO.retmsg);
+            }
+        } else if (xhr.readyState === 4) {
+            var div = get_content_div();
+            add_section(div, "发生错误: " + xhr.responseText);
+        }
+    };
+    xhr.send();
+}
+
+</script>
+</head>
+
+<body onload="make_page()">
+    <div id="main_div"></div>
+</body>
+
+</html>

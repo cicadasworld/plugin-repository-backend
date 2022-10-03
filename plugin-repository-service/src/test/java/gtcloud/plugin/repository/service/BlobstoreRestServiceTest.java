@@ -1,12 +1,10 @@
 package gtcloud.plugin.repository.service;
 
 import gtcloud.plugin.repository.domain.entity.Attachment;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 public class BlobstoreRestServiceTest {
@@ -41,7 +39,7 @@ public class BlobstoreRestServiceTest {
     @Test
     public void downloadBlobEntityFile() throws Exception {
         Attachment attachment = service.downloadBlobEntityFile("369837e8131c4b5e8d88db935c56a1ba");
-        System.out.println(attachment.getContent());
+        System.out.println(attachment.getFile().getAbsoluteFile());
     }
 
     @Test
